@@ -12,17 +12,17 @@ alpha <- .05
 # set total number of data points to 1000
 N <- 1000
 
-
-raw_count_fp_reference<- rep(NA,simulations)
-true_alpha_reference <- rep(NA,simulations)
+# 
+# raw_count_fp_reference<- rep(NA,simulations)
+# true_alpha_reference <- rep(NA,simulations)
 raw_count_fp_os <- rep(NA,simulations)
 true_alpha_os <- rep(NA,simulations)
 
 
-for (i in 1:20) {
+for (k in 1:20) {
   
 # set number of potential stops 
-checks <- i
+checks <- k
 
 
 # set sample sizes to conduct checks at (sequence from 100 to 1000 by 100 increments)

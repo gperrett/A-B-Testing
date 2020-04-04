@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "A77CECD7",
-    "lastKnownWriteTime" : 1586039674,
-    "last_content_update" : 1586039682909,
+    "lastKnownWriteTime" : 1586041431,
+    "last_content_update" : 1586041431917,
     "path" : "~/Desktop/Git_Hub/A-B-Testing/scripts/stoppage.R",
     "project_path" : "scripts/stoppage.R",
     "properties" : {
-        "cursorPosition" : "9,12",
-        "scrollLine" : "0",
+        "cursorPosition" : "20,0",
+        "scrollLine" : "14",
         "tempName" : "Untitled1"
     },
     "read_only" : false,
