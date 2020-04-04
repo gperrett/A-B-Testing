@@ -12,8 +12,17 @@ alpha <- .05
 # set total number of data points to 1000
 N <- 1000
 
+
+raw_count_fp_reference<- rep(NA,simulations)
+true_alpha_reference <- rep(NA,simulations)
+raw_count_fp_os <- rep(NA,simulations)
+true_alpha_os <- rep(NA,simulations)
+
+
+for (i in 1:20) {
+  
 # set number of potential stops 
-checks <- 10 
+checks <- i
 
 
 # set sample sizes to conduct checks at (sequence from 100 to 1000 by 100 increments)
@@ -22,7 +31,7 @@ looks <- ceiling(seq(0,N,N/checks)) %>% subset(. > 0)
 # create a matrix to store p values 
 p.mat <- matrix(NA, nrow = simulations, ncol = checks)
 # add col names to represent checks 1:10
-colnames(p.mat) <- paste0(rep("test_", 10), 1:10)
+colnames(p.mat) <- paste0(rep("test_", max(checks)), 1:max(checks))
 
 
 for(i in 1:simulations) {
@@ -32,10 +41,6 @@ for(i in 1:simulations) {
     p.mat[i,j] <-t.test(A[1:looks[j]],B[1:looks[j]], var.equal=TRUE)$p.value 
   }
 }
-
-sum(p.mat[,max(checks)] < alpha) # raw count of false positives
-sum(p.mat[,max(checks)] < alpha)/simulations # false positive percentage
-
 
 #  variable for stopping points 
 OptStop<-numeric(simulations)
@@ -48,12 +53,11 @@ for (i in 1:simulations){
 
 
 false.p <- numeric(simulations)
-
 for (i in 1:simulations){
   false.p[i] <- p.mat[i,OptStop[i]]
 }
 
-sum(false.p < alpha) # raw count of false positives
-sum(false.p < alpha)/simulations # false positive percentage
+raw_count_fp_os[i] <- sum(false.p < alpha) # raw count of false positives
+true_alpha_os[i] <- sum(false.p < alpha)/simulations # false positive percentage
 
-
+}
