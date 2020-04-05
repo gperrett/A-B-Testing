@@ -15,8 +15,8 @@ N <- 1000
 # 
 # raw_count_fp_reference<- rep(NA,simulations)
 # true_alpha_reference <- rep(NA,simulations)
-raw_count_fp_os <- rep(NA,simulations)
-true_alpha_os <- rep(NA,simulations)
+raw_count_fp_os <- rep(NA,checks)
+true_alpha_os <- rep(NA,checks)
 
 
 for (k in 1:20) {
@@ -57,7 +57,7 @@ for (i in 1:simulations){
   false.p[i] <- p.mat[i,OptStop[i]]
 }
 
-raw_count_fp_os[i] <- sum(false.p < alpha) # raw count of false positives
-true_alpha_os[i] <- sum(false.p < alpha)/simulations # false positive percentage
+raw_count_fp_os[k] <- sum(false.p < alpha) # raw count of false positives
+true_alpha_os[k] <- sum(false.p < alpha)/simulations # false positive percentage
 
 }

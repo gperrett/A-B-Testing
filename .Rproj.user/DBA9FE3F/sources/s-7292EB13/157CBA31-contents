@@ -1,6 +1,0 @@
-library(tidyverse)
-library(testthat)
-library(here)
-
-rdir <- here()
-source(file.path(rdir, "scripts", "stoppage.R"))
