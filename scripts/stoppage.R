@@ -15,11 +15,12 @@ N <- 1000
 # 
 # raw_count_fp_reference<- rep(NA,simulations)
 # true_alpha_reference <- rep(NA,simulations)
+checks <- 20
 raw_count_fp_os <- rep(NA,checks)
 true_alpha_os <- rep(NA,checks)
 
 
-for (k in 1:20) {
+for (k in 1:checks) {
   
 # set number of potential stops 
 checks <- k
