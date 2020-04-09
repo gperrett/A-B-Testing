@@ -34,20 +34,21 @@ sum(pvalues$whit.pvals <= alpha) / simulations
 
 # calculate false negatives rate are various sample size levels
 n <- c(10, 20, 30, 40, 50, 75, 100, 200, 300, 400, 500, 750, 1000)
+effect.size <- 0.1
 
 false.negative.rates <- map_dfr(n, function(N) {
   
   # calculate {simulations} with sample size {N}
   pvalues <- map_dfr(1:simulations, function(i) {
-    A <- rgamma(N, 4.5) # rpois(N, 3) # rnorm(N, 120, 15)
+    A <- rgamma(N, 4 * (1 + effect.size)) # rpois(N, 3) # rnorm(N, 120, 15)
     B <- rgamma(N, 4) # rpois(N, 3) # rnorm(N, 120, 15)
     gam.pvals <- t.test(A, B, var.equal = TRUE)$p.value
     
-    A <- rnorm(N, mean = 120*4.5/4, sd = 15)
+    A <- rnorm(N, mean = 120 * (1 + effect.size), sd = 15)
     B <- rnorm(N, mean = 120, sd = 15)
     norm.pvals <- t.test(A, B, var.equal = TRUE)$p.value
     
-    A <- rpois(N, lambda = 3)
+    A <- rpois(N, lambda = 4 * (1 + effect.size))
     B <- rpois(N, lambda = 4)
     pois.pvals <- t.test(A, B, var.equal = TRUE)$p.value
     return(tibble(gam.pvals, norm.pvals, pois.pvals))
@@ -72,12 +73,18 @@ false.negative.rates %>%
   geom_line() +
   geom_point() +
   labs(title = 'False negatives more likely at smaller sample sizes when assumptions of t-test are not met',
+       subtitle = 'Effect size = 10% increase in all tests',
        caption = paste0('Results from ', scales::comma(simulations), ' simulations per sample size'),
        x = 'Sample size',
        y = 'False negative rate') +
   theme_minimal() +
   theme(legend.position = 'bottom',
         legend.title = element_blank())
+
+ggsave('plots/wrong_test.png',
+       device = "png",
+       height = 5,
+       width = 8)
 
 
 # Q2 ----------------------------------------------------------------------
