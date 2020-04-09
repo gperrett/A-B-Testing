@@ -73,7 +73,7 @@ false.negative.rates %>%
   geom_line() +
   geom_point() +
   labs(title = 'False negatives more likely at smaller sample sizes when assumptions of t-test are not met',
-       subtitle = 'Effect size = 10% increase in all tests',
+       subtitle = paste0('Effect size = ', scales::percent(effect.size), ' increase in all tests'),
        caption = paste0('Results from ', scales::comma(simulations), ' simulations per sample size'),
        x = 'Sample size',
        y = 'False negative rate') +
