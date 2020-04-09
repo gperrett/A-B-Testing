@@ -33,7 +33,7 @@ sum(pvalues$whit.pvals <= alpha) / simulations
 
 
 # calculate false negatives rate are various sample size levels
-n <- c(10, 25, 50, 75, 100, 200, 300, 400, 500, 750, 1000)
+n <- c(10, 20, 30, 40, 50, 75, 100, 200, 300, 400, 500, 750, 1000)
 
 false.negative.rates <- map_dfr(n, function(N) {
   
@@ -46,27 +46,32 @@ false.negative.rates <- map_dfr(n, function(N) {
     A <- rnorm(N, mean = 120*4.5/4, sd = 15)
     B <- rnorm(N, mean = 120, sd = 15)
     norm.pvals <- t.test(A, B, var.equal = TRUE)$p.value
-    return(tibble(gam.pvals, norm.pvals))
+    
+    A <- rpois(N, lambda = 3)
+    B <- rpois(N, lambda = 4)
+    pois.pvals <- t.test(A, B, var.equal = TRUE)$p.value
+    return(tibble(gam.pvals, norm.pvals, pois.pvals))
   })
   
   # calculate the proportion of false negatives
   false.neg.gam <- sum(pvalues$gam.pvals > alpha) / simulations
   false.neg.norm <- sum(pvalues$norm.pvals > alpha) / simulations
+  false.neg.pois <- sum(pvalues$pois.pvals > alpha) / simulations
   
-  return(tibble(false.neg.gam, false.neg.norm))
+  return(tibble(false.neg.gam, false.neg.norm, false.neg.pois))
 })
 
 # plot of false positive rate vs. sample size
-false.negative.rate %>%
+false.negative.rates %>%
   rename("Gamma distribution" = false.neg.gam,
-         "Normal distribution" = false.neg.norm) %>% 
+         "Normal distribution" = false.neg.norm,
+         "Poisson distribution" = false.neg.pois) %>% 
   mutate(n = n) %>% 
-  pivot_longer(cols = 1:2) %>% 
+  pivot_longer(cols = 1:3) %>% 
   ggplot(aes(x = n, y = value, group = name, color = name)) +
   geom_line() +
   geom_point() +
   labs(title = 'False negatives more likely at smaller sample sizes when assumptions of t-test are not met',
-       subtitle = 'Results from t-test of two rgamma distribution with true means of 4.5 and 4.0',
        caption = paste0('Results from ', scales::comma(simulations), ' simulations per sample size'),
        x = 'Sample size',
        y = 'False negative rate') +
