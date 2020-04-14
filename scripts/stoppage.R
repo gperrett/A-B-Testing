@@ -1,4 +1,7 @@
 library(tidyverse)
+library(here)
+
+rdir <- here()
 
 # set scintific notation options 
 options(scipen=100, digits=4)
@@ -46,10 +49,14 @@ for(i in 1:simulations) {
 #  variable for stopping points 
 OptStop<-numeric(simulations)
 
+
+
 for (i in 1:simulations){
+  # if any checks are below .05 record which look
   if(any(p.mat[i,] < alpha))
-    {OptStop[i] <- min(which(p.mat[i,] < alpha))} # if any checks are below .05 record which look 
-  else{OptStop[i] <- checks} # if no checks are below alpha record the highest posible look
+  {OptStop[i] <- min(which(p.mat[i,] < alpha))}  
+  # if no checks are below alpha record the highest posible look
+  else{OptStop[i] <- checks} 
 }
 
 
@@ -62,3 +69,15 @@ raw_count_fp_os[k] <- sum(false.p < alpha) # raw count of false positives
 true_alpha_os[k] <- sum(false.p < alpha)/simulations # false positive percentage
 
 }
+
+results <- tibble(Stops = 1:checks, `Percentage of False Positives` = true_alpha_os)
+
+ggplot(results, aes(Stops, `Percentage of False Positives`)) + 
+  geom_point() + 
+  geom_smooth(method = 'loess',se = F) + 
+  scale_x_continuous(breaks = c(1,5,10,15,20)) + 
+  scale_y_continuous(labels = scales::percent) + 
+  theme_minimal() + 
+  labs(title = "Optional Stoping and Flase Postives")
+ggsave("optional.stops.pdf", path = file.path(rdir,"/figures"))
+
