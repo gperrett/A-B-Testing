@@ -81,7 +81,7 @@ false.negative.rates %>%
   theme(legend.position = 'bottom',
         legend.title = element_blank())
 
-ggsave('plots/wrong_test.png',
+ggsave('figures/wrong_test.png',
        device = "png",
        height = 5,
        width = 8)
