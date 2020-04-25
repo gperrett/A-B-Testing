@@ -2,7 +2,7 @@ library(tidyverse)
 library(pwr)
 
 # Test Data - Cookie Cats:
-testdata <- read.csv("/Users/mbp/Documents/Side Projects/A-B-Testing-master/Test Data/cookie_cats.csv")
+testdata <- read.csv("data/cookie_cats.csv")
 
 # Exploratory Data Analysis:
 summary(testdata)
