@@ -64,8 +64,12 @@ results %>%
   scale_x_continuous(breaks = c(1, 5, 10, 15, 20)) + 
   scale_y_continuous(labels = scales::percent) + 
   theme_minimal() + 
-  labs(title = "False positives increase as the number of stops increases",
-       subtitle = paste0("Based on ", scales::comma(simulations), " simulations"),
+  labs(title = "Frequent stoppage increases false positives",
+       subtitle = paste0(scales::comma(simulations), " simulations"),
        x = "Number of stops")
-# ggsave("optional.stops.pdf", path = file.path(rdir,"/figures"))
+
+ggsave('figures/optional.stops.png',
+       device = "png",
+       height = 4,
+       width = 6)
 
