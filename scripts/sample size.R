@@ -41,9 +41,7 @@ sample.size.falacy <- function(mu, effect, simulations = 10000) {
   return(p.mat)
 }
 
-
 # run the simulations at different effect sizes
-# no.difference <- sample.size.falacy(mus[1], mus[1]) %>% mutate(`Effect Size` = "No difference")
 one.difference <- sample.size.falacy(mus[1], mus[2]) %>% 
   mutate(`Effect Size` = paste0(scales::percent(0.01, accuracy = 1), " difference"))
 two.difference <- sample.size.falacy(mus[1], mus[3]) %>% 
@@ -74,13 +72,13 @@ effect.size.plot %>%
   geom_line() + 
   scale_x_continuous(labels = scales::comma) + 
   scale_y_continuous(labels = scales::percent) + 
-  labs(title = "How often were A and B found to be different?", 
+  labs(title = "Large sample size increases the chance of finding an effect", 
        subtitle = "10,000 simulations",
-       y = 'Percent of simulations showing difference', 
+       y = 'Probability of finding an effect', 
        x = "Sample size") +
   theme_minimal() +
   theme(legend.position = c(0.8, 0.35),
-        legend.box.background = element_rect(color = 'white'))
+        legend.box.background = element_rect(color = 'grey90'))
 ggsave('figures/effect.size.plot.png',
        device = "png",
        height = 5,
