@@ -1,8 +1,6 @@
 library(tidyverse)
 library(parallel)
-library(here)
-
-rdir <- here()
+set.seed(44)
 
 # set number of cores available for parallel processing
 cpu.cores <- detectCores()
@@ -13,6 +11,9 @@ options(scipen = 100, digits = 4)
 # set alpha of a/b checks to .05
 alpha <- 0.05
 
+# difference in effect size translated to mu
+mus <- 120 * (1 + c(0, 0.01, 0.05, 0.1))
+
 
 # sample size illustration ------------------------------------------------
 
@@ -22,8 +23,7 @@ sample.size.falacy <- function(mu, effect, simulations = 10000) {
   # returns dataframe with pvalue for each sample size
   
   # set sequence of sample sizes to run
-  sample.size <- seq(0, 50000, by = 5000)
-  sample.size[1] <- 100
+  sample.size <- c(100, 500, 1000, 2500, 5000, 10000)
   sample.size <- rep(sample.size, simulations)
   
   # create two random normals, conduct t-test, and record p value
@@ -41,57 +41,87 @@ sample.size.falacy <- function(mu, effect, simulations = 10000) {
   return(p.mat)
 }
 
+
 # run the simulations at different effect sizes
-no.difference <- sample.size.falacy(120, 120) %>% mutate(`Effect Size` = "No difference")
-one.tenth <- sample.size.falacy(120, 120.1) %>% mutate(`Effect Size` = "0.1 secounds")
-quarter.secound <- sample.size.falacy(120, 120.25) %>% mutate(`Effect Size` = "0.25 secounds")
-half.secound <- sample.size.falacy(120, 120.5) %>% mutate(`Effect Size` = "0.5 secounds")
-full.secound <- sample.size.falacy(120, 121) %>% mutate(`Effect Size` = "1 secounds")
+# no.difference <- sample.size.falacy(mus[1], mus[1]) %>% mutate(`Effect Size` = "No difference")
+one.difference <- sample.size.falacy(mus[1], mus[2]) %>% 
+  mutate(`Effect Size` = paste0(scales::percent(0.01, accuracy = 1), " difference"))
+two.difference <- sample.size.falacy(mus[1], mus[3]) %>% 
+  mutate(`Effect Size` = paste0(scales::percent(0.05, accuracy = 1), " difference"))
+three.difference <- sample.size.falacy(mus[1], mus[4]) %>% 
+  mutate(`Effect Size` = paste0(scales::percent(0.1, accuracy = 1), " difference"))
 
 # combine results into one dataframe and calculate proportion of values less than alpha
-effect.size.plot <- rbind(one.tenth, 
-                          quarter.secound, 
-                          half.secound, 
-                          full.secound) %>% 
+effect.size.plot <- rbind(one.difference, 
+                          two.difference, 
+                          three.difference) %>% 
   group_by(sample.size, `Effect Size`) %>% 
   count(sig = pval < alpha) %>% 
   filter(sig == T) %>% 
   arrange(sample.size) %>% 
   mutate(prop = n/10000) %>% 
-  mutate(sample = paste0("N = ", sample.size))
+  mutate(sample = paste0("N = ", sample.size)) %>% 
+  ungroup()
 
 # plot percent of sims showing difference vs. sample size
-ggplot(effect.size.plot, aes(sample.size , prop, col = `Effect Size`)) + 
+effect.size.plot %>% 
+  mutate(`Effect Size` = factor(`Effect Size`,
+                                levels = paste0(scales::percent(c(0.01, 0.05, 0.1),
+                                                                accuracy = 1),
+                                                " difference"))) %>% 
+  ggplot(aes(x = sample.size, y = prop, col = `Effect Size`)) + 
   geom_point() + 
   geom_line() + 
+  scale_x_continuous(labels = scales::comma) + 
   scale_y_continuous(labels = scales::percent) + 
-  theme_minimal() + 
   labs(title = "How often were A and B found to be different?", 
+       subtitle = "10,000 simulations",
        y = 'Percent of simulations showing difference', 
-       x = "Sample Size")
-# ggsave("effect.size.plot.pdf", path = file.path(rdir,"/figures"))
+       x = "Sample size") +
+  theme_minimal() +
+  theme(legend.position = c(0.8, 0.35),
+        legend.box.background = element_rect(color = 'white'))
+ggsave('figures/effect.size.plot.png',
+       device = "png",
+       height = 5,
+       width = 8)
 
 
 # effect size density illustration-------------------------------------------
 
-# effect size translated to mu
-mus <- 120 * (1 + c(0, 0.001, 0.01, 0.05, 0.1))
+# set sample size
+samp.size <- 5000
 
 # matrix of normal distributions at different effect sizes
-norm.mat <- sapply(mus, function(x) rnorm(n = 100000, mean = x, sd = 15)) %>% as_tibble()
-names(norm.mat) <- c("Original", paste0(scales::percent(c(0.001, 0.01, 0.05, 0.1)), " shift"))
+norm.mat <- sapply(mus, function(x) rnorm(n = samp.size, mean = x, sd = 15)) %>% as_tibble()
+
+# run t.tests
+pvals <- apply(norm.mat[,2:4], MARGIN = 2, function(col) t.test(x = norm.mat$V1, y = col, var.equal = TRUE)$p.value)
+
+# set names
+col.names <- c("Original", paste0(scales::percent(c(0.01, 0.05, 0.1), accuracy = 1), 
+                                     " difference\n p-value = ",
+                                  scales::comma(pvals, accuracy = .001)))
+names(norm.mat) <- col.names
 
 # density plot of various effect size 
 norm.mat %>% 
   pivot_longer(2:length(mus)) %>% 
-  mutate(name = factor(name, levels = paste0(scales::percent(c(0.001, 0.01, 0.05, 0.1)), " shift"))) %>% 
+  mutate(name = factor(name, levels = col.names)) %>% 
   ggplot() +
   geom_density(aes(x = Original)) +
   geom_density(aes(x = value, color = name)) +
-  facet_wrap(~name) +
-  labs(title = "Changes in mean still results in significant overlap of distributions",
+  scale_x_continuous(labels = NULL) +
+  scale_y_continuous(labels = NULL) +
+  facet_wrap(~name, nrow = 1) +
+  labs(title = "Statistical significance is not always meaningful",
+       subtitle = paste0("Sample size of ", scales::comma(samp.size), " each"),
        x = NULL,
        y = NULL) +
   theme_minimal() +
   theme(legend.position = "none")
-# ggsave("effect_comp.pdf", path = file.path(rdir,"/figures"))
+ggsave('figures/effect_comp.png',
+       device = "png",
+       height = 5,
+       width = 8)
+
