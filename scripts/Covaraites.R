@@ -35,32 +35,46 @@ t.test(A,B)
 ggplot(study, aes(value, fill = name)) + 
   geom_density(alpha = .7) + 
   labs(title = "A/B Test Results",
-       subtitle = "A = 44.56 minutes\nB = 42.72 minutes\np-value = .2") + 
+       subtitle = "A = 44.56 minutes\nB = 42.72 minutes\np-value = .2", 
+       x = "Minutes Spent on Site", 
+       y = element_blank()) + 
   theme_minimal() + 
   theme(legend.title = element_blank(),
         legend.position = c(0.8, 0.8),
-        legend.box.background = element_rect(color = 'white'))
+        legend.box.background = element_rect(color = 'white'), 
+        axis.text.y = element_blank())
 
-
-# concider the impact of engagement medium 
-ggplot(study, aes(value,group = conditional, fill = name)) + 
-  geom_density(alpha = .7) + 
-  labs("A/B Test Result")
-  theme_minimal()+ 
-  theme(strip.text.x = element_text(size = 12,face = "bold"),
-        legend.title = element_blank(),
-        legend.position = "bottom")
-
-# create seperate facets by medium type
-ggplot(study, aes(value, fill = name)) + 
-  geom_density(alpha = .7) + 
-  facet_wrap(~Medium, scales = "free") + 
-  theme_minimal()+ 
-  theme(strip.text.x = element_text(size = 12,face = "bold"),
-        legend.title = element_blank(),
-        legend.position = "bottom")
+ggsave('figures/no_interaction.png',
+       device = "png",
+       height = 4,
+       width = 6)
 
 # conduct a test to specify engagement types
 reg.output <- tidy(summary(lm(value~ name*Medium, study)))
 reg.output[2:4,1] <- c("B", "Mobile", "B x Mobile Interaction")
 reg.output
+
+lab.sup <- c("Computer\nA = 43.5\nB = 32.4\np-value < .001", 
+          "Mobile\nA = 45.33\nB = 51.16\np-value < .001")
+
+names(lab.sup) <- c("Computer", "Mobile")
+# create seperate facets by medium type
+ggplot(study, aes(value, fill = name)) + 
+  geom_density(alpha = .7) + 
+  labs(title = "A/B Test Results with Interaction",
+       x = "Minutes Spent on Site", 
+       y = element_blank()) + 
+  facet_wrap(~Medium,
+             labeller = labeller(Medium = lab.sup)) + 
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        legend.position = c(0.95, 0.85),
+        legend.box.background = element_rect(color = 'white'), 
+        axis.text.y = element_blank())
+
+ggsave('figures/interaction.png',
+       device = "png",
+       height = 4,
+       width = 6)
+
+
