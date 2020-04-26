@@ -81,8 +81,8 @@ error_rate %>%
              arrow = arrow(type = 'closed', length = unit(0.3, "cm"))) +
   annotate('label', x = 10, y = 0.12, label = "Bonferroni adjusted rate",
            fill = 'white', color = 'blue') +
-  labs(title = "Unadjusted mulitple comparisons increase false positives",
-       subtitle = paste0(scales::comma(simulations), " simulations"),
+  labs(title = "Unadjusted multiple comparisons increase false positives",
+       subtitle = paste0(scales::comma(Nsim), " simulations"),
        x = "Number of comparisons",
        y = "False positive rate") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
