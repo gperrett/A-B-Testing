@@ -34,14 +34,18 @@ t.test(A,B)
 # plot data 
 ggplot(study, aes(value, fill = name)) + 
   geom_density(alpha = .7) + 
+  labs(title = "A/B Test Results",
+       subtitle = "A = 44.56 minutes\nB = 42.72 minutes\np-value = .2") + 
   theme_minimal() + 
   theme(legend.title = element_blank(),
-  legend.position = "bottom")
+        legend.position = c(0.8, 0.8),
+        legend.box.background = element_rect(color = 'white'))
 
 
 # concider the impact of engagement medium 
 ggplot(study, aes(value,group = conditional, fill = name)) + 
   geom_density(alpha = .7) + 
+  labs("A/B Test Result")
   theme_minimal()+ 
   theme(strip.text.x = element_text(size = 12,face = "bold"),
         legend.title = element_blank(),
