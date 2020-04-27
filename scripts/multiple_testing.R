@@ -53,42 +53,23 @@ ggplot(error_rate, aes(x = k, y = error_rate2)) +
 
 # plot of false positives vs. adjusted
 error_rate %>% 
-  mutate(actual1 = 1-(.95)^(1:20),
-         actual2 = 0.05) %>% 
+  rename('Unadjusted rate' = error_rate1,
+         'Bonferroni adjusted rate' = error_rate2) %>% 
   pivot_longer(cols = -k) %>% 
-  ggplot(aes(x = k, y = value, group = name, color = name, alpha = name)) + 
+  mutate(name = factor(name, levels = c('Unadjusted rate', 'Bonferroni adjusted rate'))) %>% 
+  ggplot(aes(x = k, y = value, group = name, color = name)) + 
   geom_point() + 
   geom_line() +
-  scale_color_manual(values = c('red', 'blue', 'red', 'blue')) +
-  scale_alpha_manual(values = c(1, 1, 0.5, 0.5)) +
-  geom_curve(aes(x = 11, y = 0.6, 
-                 xend = 14.5, yend = 0.54),
-             curvature = -0.4, color = 'red', size = 0.1,
-             arrow = arrow(type = 'closed', length = unit(0.3, "cm"))) +
-  annotate('label', x = 8, y = 0.6, label = "Simulated unadjusted rate", 
-           fill = 'white', color = 'red') +
-  
-  geom_curve(aes(x = 13.5, y = 0.35, 
-                 xend = 8.5, yend = 0.32),
-             curvature = -0.4, color = 'red', size = 0.1,
-             arrow = arrow(type = 'closed', length = unit(0.3, "cm"))) +
-  annotate('label', x = 15, y = 0.35, label = "Analytical solution", 
-           fill = 'white', color = "red") +
-  
-  geom_curve(aes(x = 13, y = 0.12, 
-                 xend = 15.5, yend = 0.07),
-             curvature = -0.4, color = 'blue', size = 0.1,
-             arrow = arrow(type = 'closed', length = unit(0.3, "cm"))) +
-  annotate('label', x = 10, y = 0.12, label = "Bonferroni adjusted rate",
-           fill = 'white', color = 'blue') +
-  labs(title = "Unadjusted multiple comparisons increase false positives",
-       subtitle = paste0(scales::comma(Nsim), " simulations"),
-       x = "Number of comparisons",
-       y = "False positive rate") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 0.70)) + 
+  labs(title = "Unadjusted multiple comparisons increases false positives",
+       subtitle = paste0(scales::comma(Nsim), " simulations"),
+       x = 'Number of comparisons',
+       y = 'False positive rate') +
   theme_minimal() +
-  theme(legend.position = 'none')
+  theme(legend.position = c(0.775, 0.375),
+        legend.box.background = element_rect(color = 'grey90'),
+        legend.title = element_blank())
 
 ggsave('figures/mutliple_comparisons.png',
        device = "png",
