@@ -1,8 +1,5 @@
 library(tidyverse)
 library(parallel)
-library(here)
-
-rdir <- here()
 
 # set number of cores available for parallel processing
 cpu.cores <- detectCores()
