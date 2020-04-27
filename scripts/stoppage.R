@@ -1,10 +1,11 @@
 library(tidyverse)
 library(parallel)
+set.seed(44)
 
 # set number of cores available for parallel processing
 cpu.cores <- detectCores()
 
-# set scintific notation options 
+# set scientific notation options 
 options(scipen = 100, digits = 4)
 
 # set number of simulations to 10,000
@@ -57,9 +58,9 @@ results %>%
   summarize(`Percentage of false positives` = sum(false.positive) / simulations) %>% 
   ggplot(aes(x = checks, y = `Percentage of false positives`)) +
   geom_point() + 
-  geom_smooth(method = 'loess', se = F) + 
+  geom_line() +
   scale_x_continuous(breaks = c(1, 5, 10, 15, 20)) + 
-  scale_y_continuous(labels = scales::percent) + 
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
   theme_minimal() + 
   labs(title = "Frequent stoppage increases false positives",
        subtitle = paste0(scales::comma(simulations), " simulations"),
