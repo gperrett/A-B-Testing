@@ -28,9 +28,9 @@ t.test(A,B)
 # plot data 
 ggplot(study, aes(value, fill = name)) + 
   geom_density(alpha = .7) + 
-  labs(title = "A/B Test Results",
+  labs(title = "A/B test results",
        subtitle = "A = 44.56 minutes\nB = 42.72 minutes\np-value = .2", 
-       x = "Minutes Spent on Site", 
+       x = "Minutes spent on site", 
        y = element_blank()) + 
   theme(legend.title = element_blank(),
         legend.position = c(0.8, 0.8),
@@ -52,13 +52,13 @@ names(lab.sup) <- c("Computer", "Mobile")
 # create seperate facets by medium type
 ggplot(study, aes(value, fill = name)) + 
   geom_density(alpha = .7) + 
-  labs(title = "A/B Test Results with Interaction",
-       x = "Minutes Spent on Site", 
+  labs(title = "A/B test results with interaction",
+       x = "Minutes spent on site", 
        y = element_blank()) + 
   facet_wrap(~Medium,
              labeller = labeller(Medium = lab.sup)) + 
   theme(legend.title = element_blank(),
-        legend.position = c(0.95, 0.85),
+        legend.position = c(0.5, 0.85),
         legend.box.background = element_rect(color = 'white'), 
         axis.text.y = element_blank())
 

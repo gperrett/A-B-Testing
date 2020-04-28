@@ -10,7 +10,10 @@ options(scipen = 100, digits = 4)
 theme_set(theme_minimal())
 
 # wrap ggplot() with a new default color palette
-ggplot <- function(...) ggplot2::ggplot(...) + scale_color_brewer(palette = "Dark2")
+ggplot <- function(...){ ggplot2::ggplot(...) + 
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Set1")
+}
 
 # set wrapper around saving plots so size and type is consistent
 save_plot <- function(plot = ggplot2::last_plot(), name, type = "svg", height = 4, width = 6.5){
