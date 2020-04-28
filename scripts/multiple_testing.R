@@ -5,7 +5,7 @@
 ## This will illustrate that as the number of comparisons/tests increases, the chances of a type 1 error
 ## increase significantly.
 
-library(tidyverse)
+source("scripts/helper_functions.R")
 
 N <- 1000 # Set sample size (i.e. number of data points or people viewing website)
 Nsim <- 10000 # Set number of simulations
@@ -30,26 +30,6 @@ for (j in 1:k) {
   error_rate[j,3] <- mean(rowSums(pmat[,1:j, drop = FALSE] < 0.05/j) >= 1)
 }
 
-# Plot Type 1 Error rate (False Positive Rate) vs. Number of Comparisons (k):
-ggplot(error_rate, aes(x = k, y = error_rate1)) + 
-  geom_point() + 
-  geom_line() +
-  ggtitle(label = "Increase in False Positive Rate due to Multiple Comparisons") +
-  xlab("Number of Comparisons") + ylab("False Positive Rate") +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
-  theme_minimal()
-
-ggplot(error_rate, aes(x = k, y = error_rate2)) + 
-  geom_point() + 
-  geom_line() +
-  ggtitle(label = "False Positive Rate - Multiple Comparisons",
-          subtitle = "With Bonferroni Correction") +
-  xlab("Number of Comparisons") + ylab("False Positive Rate") +
-  scale_y_continuous(limits = c(0,.10), labels = scales::percent) + 
-  theme_minimal()
-
-
-
 
 # plot of false positives vs. adjusted
 error_rate %>% 
@@ -66,14 +46,10 @@ error_rate %>%
        subtitle = paste0(scales::comma(Nsim), " simulations"),
        x = 'Number of comparisons',
        y = 'False positive rate') +
-  theme_minimal() +
   theme(legend.position = c(0.775, 0.375),
         legend.box.background = element_rect(color = 'grey90'),
         legend.title = element_blank())
 
-ggsave('figures/mutliple_comparisons.png',
-       device = "png",
-       height = 4,
-       width = 6)
+save_plot(name = 'multiple_comparisons')
 
 

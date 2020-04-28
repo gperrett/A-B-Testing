@@ -1,12 +1,6 @@
-library(tidyverse)
+source("scripts/helper_functions.R")
 library(broom)
 library(ggrepel)
-
-# set seed
-set.seed(44)
-
-# set scintific notation options 
-options(scipen=100, digits=4)
 
 # Generate Distributions
 A <- tibble(A = rnorm(250, 45, 15))
@@ -38,16 +32,13 @@ ggplot(study, aes(value, fill = name)) +
        subtitle = "A = 44.56 minutes\nB = 42.72 minutes\np-value = .2", 
        x = "Minutes Spent on Site", 
        y = element_blank()) + 
-  theme_minimal() + 
   theme(legend.title = element_blank(),
         legend.position = c(0.8, 0.8),
         legend.box.background = element_rect(color = 'white'), 
         axis.text.y = element_blank())
 
-ggsave('figures/no_interaction.png',
-       device = "png",
-       height = 4,
-       width = 6)
+save_plot(name = 'no_interaction')
+
 
 # conduct a test to specify engagement types
 reg.output <- tidy(summary(lm(value~ name*Medium, study)))
@@ -66,15 +57,10 @@ ggplot(study, aes(value, fill = name)) +
        y = element_blank()) + 
   facet_wrap(~Medium,
              labeller = labeller(Medium = lab.sup)) + 
-  theme_minimal() +
   theme(legend.title = element_blank(),
         legend.position = c(0.95, 0.85),
         legend.box.background = element_rect(color = 'white'), 
         axis.text.y = element_blank())
 
-ggsave('figures/interaction.png',
-       device = "png",
-       height = 4,
-       width = 6)
-
+save_plot(name = 'interaction')
 

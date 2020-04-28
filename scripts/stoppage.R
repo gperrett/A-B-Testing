@@ -1,12 +1,8 @@
-library(tidyverse)
+source("scripts/helper_functions.R")
 library(parallel)
-set.seed(44)
 
 # set number of cores available for parallel processing
 cpu.cores <- detectCores()
-
-# set scientific notation options 
-options(scipen = 100, digits = 4)
 
 # set number of simulations to 10,000
 simulations <- 10000
@@ -61,13 +57,9 @@ results %>%
   geom_line() +
   scale_x_continuous(breaks = c(1, 5, 10, 15, 20)) + 
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
-  theme_minimal() + 
   labs(title = "Frequent stoppage increases false positives",
        subtitle = paste0(scales::comma(simulations), " simulations"),
        x = "Number of stops")
 
-ggsave('figures/optional.stops.png',
-       device = "png",
-       height = 4,
-       width = 6)
+save_plot(name = 'optional_stops')
 

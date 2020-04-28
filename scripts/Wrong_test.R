@@ -1,8 +1,4 @@
-library(tidyverse)
-set.seed(44)
-
-# set scintific notation options 
-options(scipen=100, digits=4)
+source("scripts/helper_functions.R")
 
 # set number of simulations to 10,000
 simulations <- 1000
@@ -77,20 +73,15 @@ false.negative.rates %>%
        caption = paste0('Results from ', scales::comma(simulations), ' simulations per sample size'),
        x = 'Sample size',
        y = 'False negative rate') +
-  theme_minimal() +
   theme(legend.position = 'bottom',
         legend.title = element_blank())
 
-ggsave('figures/wrong_test.png',
-       device = "png",
-       height = 5,
-       width = 8)
+save_plot(name = 'wrong_test')
 
 
 # Q2 ----------------------------------------------------------------------
 
 # test of binary data
-
 N <- 50
 
 # Generate a binary dataset and fit a t-test and logistic regression

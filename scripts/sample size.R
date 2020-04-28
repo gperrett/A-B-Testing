@@ -1,12 +1,8 @@
-library(tidyverse)
+source("scripts/helper_functions.R")
 library(parallel)
-set.seed(44)
 
 # set number of cores available for parallel processing
 cpu.cores <- detectCores()
-
-# set scintific notation options 
-options(scipen = 100, digits = 4)
 
 # set alpha of a/b checks to .05
 alpha <- 0.05
@@ -76,13 +72,10 @@ effect.size.plot %>%
        subtitle = "10,000 simulations",
        y = 'Probability of finding an effect', 
        x = "Sample size") +
-  theme_minimal() +
   theme(legend.position = c(0.8, 0.35),
         legend.box.background = element_rect(color = 'grey90'))
-ggsave('figures/effect.size.plot.png',
-       device = "png",
-       height = 5,
-       width = 8)
+
+save_plot(name = 'effect_size')
 
 
 # effect size density illustration-------------------------------------------
@@ -107,8 +100,8 @@ norm.mat %>%
   pivot_longer(2:length(mus)) %>% 
   mutate(name = factor(name, levels = col.names)) %>% 
   ggplot() +
-  geom_density(aes(x = Original)) +
-  geom_density(aes(x = value, color = name)) +
+  geom_density(aes(x = Original), size = 1, color = "grey50", alpha = 0.8) +
+  geom_density(aes(x = value, color = name), size = 1, alpha = 0.8) +
   scale_x_continuous(labels = NULL) +
   scale_y_continuous(labels = NULL) +
   facet_wrap(~name, nrow = 1) +
@@ -116,10 +109,7 @@ norm.mat %>%
        subtitle = paste0("Sample size of ", scales::comma(samp.size), " each"),
        x = NULL,
        y = NULL) +
-  theme_minimal() +
   theme(legend.position = "none")
-ggsave('figures/effect_comp.png',
-       device = "png",
-       height = 5,
-       width = 8)
+
+save_plot(name = 'effect_comp')
 
