@@ -6,7 +6,7 @@ set.seed(44)
 # set scientific notation options 
 options(scipen = 100, digits = 4)
 
-# set the previously defined theme as the default
+# set a default theme
 theme_set(theme_minimal())
 
 # wrap ggplot() with a new default color palette
