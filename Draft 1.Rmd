@@ -1,6 +1,6 @@
 ---
 title: "A/B Testing Draft 1"
-output: html_document
+output: pdf_document
    
 ---
 
@@ -9,8 +9,6 @@ knitr::opts_chunk$set(echo = FALSE)
 library(knitr)
 
 ```
-
-### Why run an A/B test?
 
 A/B testing has become a buzz-word across the tech landscape. The method allows decision makers to see which version of a product performs better and enables leaders to make evidence-informed decisions. Companies, political campaigns, and market research firms, often utilize these tests to improve website design, products, and marketing strategies. 
 
@@ -30,7 +28,7 @@ This is a problem. Following A/B test theory, there is a 5% chance that a positi
 Results show that stopping five times increases the false positive rate to about 15%, whereas stopping as many as 20 times increases the false positive rate to about 25%. Frequent stopping can seem like a way to deliver quick results, but it drastically increases the risk of reaching a false conclusion. 
 
 <center>
-![](figures/optional.stops.png){ width=50% }
+<!--![](figures/optional_stops.png){ width=50% } -->
 </center>
 
 
@@ -52,7 +50,7 @@ The plot below shows the increase in false positives as the number of comparison
 
 
 <center>
-![](figures/mutliple_comparisons.png){ width=50% }
+<!--![](figures/mutliple_comparisons.png){ width=50% }-->
 </center>
 
 
@@ -71,7 +69,7 @@ The below examples visualize different effect sizes that all have statistically 
 
 
 <center>
-![](figures/effect_comp.png){ width=50% }
+<!--![](figures/effect_comp.png){ width=50% } -->
 </center>
 
 
@@ -81,7 +79,7 @@ Incredibly small effects reach statistical significance as sample size grows. If
 
 
 <center>
-![](figures/effect.size.plot.png){ width=50% }
+<!--![](figures/effect.size.plot.png){ width=50% } -->
 </center>
 
 
@@ -97,7 +95,7 @@ This simple A/B test does not account for the possibility that the effect of ver
 
 
 <center>
-![](figures/no_interaction.png){ width=50% }
+![](figures/no_interaction.png){ width=80% }
 </center>
 
 
@@ -106,7 +104,7 @@ When you examine the potential interaction between mediums (either computer or m
 
 
 <center>
-![](figures/interaction.png){ width=50% }
+![](figures/interaction.png){ width=80% }
 </center>
 
 

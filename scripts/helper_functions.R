@@ -16,7 +16,7 @@ ggplot <- function(...){ ggplot2::ggplot(...) +
 }
 
 # set wrapper around saving plots so size and type is consistent
-save_plot <- function(plot = ggplot2::last_plot(), name, type = "svg", height = 4, width = 6.5){
+save_plot <- function(plot = ggplot2::last_plot(), name, type = "png", height = 4, width = 6.5){
   ggsave(plot = plot,
          paste0('figures/', name, '.', type),
          device = type,
