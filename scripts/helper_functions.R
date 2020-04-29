@@ -16,10 +16,19 @@ ggplot <- function(...){ ggplot2::ggplot(...) +
 }
 
 # set wrapper around saving plots so size and type is consistent
-save_plot <- function(plot = ggplot2::last_plot(), name, type = "png", height = 4, width = 6.5){
-  ggsave(plot = plot,
-         paste0('figures/', name, '.', type),
-         device = type,
-         height = height,
-         width = width)
+save_plot <- function(name, plot = ggplot2::last_plot(), type = c("png", "svg"), height = 4, width = 6.5){
+  # function saves ggplots with standardized sizes
+  # if more than one type is provided, then plot is saved once per each type
+  
+  invisible(
+    map(type, function(x) {
+      ggplot2::ggsave(
+       filename = paste0('figures/', name, '.', x),
+       plot = plot,
+       device = x,
+        height = height,
+       width = width
+    )
+  })
+  )
 }

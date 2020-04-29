@@ -43,7 +43,6 @@ save_plot(name = 'no_interaction')
 # conduct a test to specify engagement types
 reg.output <- tidy(summary(lm(value~ name*Medium, study)))
 reg.output[2:4,1] <- c("B", "Mobile", "B x Mobile Interaction")
-reg.output
 
 lab.sup <- c("Computer\nA = 43.5\nB = 32.4\np-value < .001", 
           "Mobile\nA = 45.33\nB = 51.16\np-value < .001")
