@@ -19,7 +19,7 @@ You’re probably already doing A/B testing, but you could be doing it wrong. Th
 * Insignificant “Significant” Results: ignoring effect size.
 * Ignoring Interactions: randomization is not always enough. 
 
-### Optional stopping
+## Optional stopping
 
 One choice during the A/B process is deciding when data collection should stop and testing should begin. Making quick decisions is valuable, and it is tempting to frequently test the results as data comes in. For instance, you could stop data collection after every 100 users and conduct your analysis; if there is no significant finding, you resume data collection and repeat the process.
 
@@ -45,9 +45,11 @@ A single A/B test cycle can be used to answer many questions:
 
 Testing multiple outcomes allows you to get the most out of a single cycle, but careful considerations need to be taken to avoid drastically increasing the false positive rate. This risk increases with each additional outcome and without implementing the correct adjustment, the probability of coming to a false conclusion substantially rises. 
  
-> To calculate the increase in risk of a false positive result, there is a simple formula based on the number of hypotheses you are testing (c) at a significance level of 0.05:
-> Probability of at least one false positive = $1 - (1 - 0.05)^c$
-> Example: 5 tests = 1-(1-0.05)^5  = 23% chance of a false positive.
+> * To calculate the increase in risk of a false positive result, there is a simple formula based on the number of hypotheses you are testing (c) at a significance level of 0.05:
+
+> * Probability of at least one false positive = $1 - (1 - 0.05)^c$
+
+> * Example: 5 tests = 1-(1-0.05)^5  = 23% chance of a false positive.
 
 The risk of multiple comparisons can be controlled by introducing the Bonferroni correction ^[https://www.stat.berkeley.edu/~mgoldman/Section0402.pdf], which accounts for the additional false positive risk introduced with each additional outcome. 
 
@@ -79,7 +81,7 @@ include_graphics("figures/effect_comp.png")
 Now, if the true difference between both versions was one second spent on the website, is this meaningful enough to your team? Will it translate it into higher revenue that can justify rolling out this new version? Sometimes implementing a new version of a product can be costly, so it’s imperative to review whether or not it’s worth it. You should think not only of statistical significance, but the effect size.  
 
 
-###Large sample, small effect
+### Large sample, small effect
 
 Incredibly small effects reach statistical significance as sample size grows. If you usually work with large sample sizes, a statistically significant result many not necessarily signal a meaningful change.
 
